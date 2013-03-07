@@ -1,0 +1,39 @@
+{
+  "name": "Backbone.CrossDomainModel",
+  "description": "A model extension for Backbone.js with a Sync that works with IE 7-9 using its XDomainRequest",
+  "version": "0.1.0",
+  "homepage": "https://github.com/victorquinn/Backbone.CrossDomainModel",
+  "author": {
+    "name": "Victor Quinn",
+    "email": "mail@victorquinn.com",
+    "url": "http://victorquinn.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/victorquinn/Backbone.CrossDomainModel.git"
+  },
+  "bugs": {
+    "url": "https://github.com/victorquinn/Backbone.CrossDomainModel/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/victorquinn/Backbone.CrossDomainModel/blob/master/LICENSE-MIT"
+    }
+  ],
+  "main": "Gruntfile.js",
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "devDependencies": {
+    "grunt-contrib-qunit": "0.1.1rc6",
+    "grunt": "0.4.0rc7"
+  },
+  "keywords": [
+    "backbone",
+    "plugin"
+  ]
+}

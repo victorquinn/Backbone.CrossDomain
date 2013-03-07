@@ -18,8 +18,10 @@
 
     Backbone.CrossDomainModel = Backbone.Model.extend({
         sync : function (method, model, options) {
+            // This currently catches IE10 as well which supports XMLHttpRequest so it should
+            // probably only trap IE < 10.
             if (window.XDomainRequest) {
-                // Backbone.sync (rewritten to use XDomainRequest object
+                // Backbone.sync (rewritten to use XDomainRequest object)
                 // -------------
 
                 // Map from CRUD to HTTP for our default `Backbone.sync` implementation.
@@ -51,6 +53,9 @@
                 var type = methodMap[method];
 
                 // XDomainRequest only works with POST. So DELETE/PUT/PATCH can't work here.
+                if (method === 'update' || method === 'patch' || method === 'delete') {
+                    throw new Error('Backbone.CrossDomainModel cannot use PUT, PATCH, DELETE with XDomainRequest (IE)');
+                }
 
                 // Default options, unless specified.
                 _.defaults(options || (options = {}), {

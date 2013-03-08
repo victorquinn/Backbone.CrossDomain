@@ -91,10 +91,76 @@ $(document).ready(function() {
 
     // Perform these tests only for IE
     if (window.XDomainRequest) {
-        test("Try a DELETE request.", 1, function() {
+
+        // Make sure non-cross domain requests work fine and as normal
+        test("Backbone.ajax", 1, function() {
+            Backbone.ajax = function(settings){
+                strictEqual(settings.url, '/test');
+            };
+            var model = new Backbone.CrossDomainModel();
+            model.url = '/test';
+            Backbone.sync('create', model);
+        });
+
+        test("Call provided error callback on error.", 1, function() {
+            var model = new Backbone.CrossDomainModel;
+            model.url = '/test';
+            Backbone.sync('read', model, {
+                error: function() { ok(true); }
+            });
+            this.ajaxSettings.error();
+        });
+
+        test('Use Backbone.emulateHTTP as default.', 2, function() {
+            var model = new Backbone.CrossDomainModel;
+            model.url = '/test';
+
+            Backbone.emulateHTTP = true;
+            model.sync('create', model);
+            strictEqual(this.ajaxSettings.emulateHTTP, true);
+
+            Backbone.emulateHTTP = false;
+            model.sync('create', model);
+            strictEqual(this.ajaxSettings.emulateHTTP, false);
+        });
+
+        test('Use Backbone.emulateJSON as default.', 2, function() {
+            var model = new Backbone.CrossDomainModel;
+            model.url = '/test';
+
+            Backbone.emulateJSON = true;
+            model.sync('create', model);
+            strictEqual(this.ajaxSettings.emulateJSON, true);
+
+            Backbone.emulateJSON = false;
+            model.sync('create', model);
+            strictEqual(this.ajaxSettings.emulateJSON, false);
+        });
+
+        test("#1756 - Call user provided beforeSend function.", 4, function() {
             Backbone.emulateHTTP = true;
             var model = new Backbone.CrossDomainModel;
             model.url = '/test';
+            var xhr = {
+                setRequestHeader: function(header, value) {
+                    strictEqual(header, 'X-HTTP-Method-Override');
+                    strictEqual(value, 'DELETE');
+                }
+            };
+            model.sync('delete', model, {
+                beforeSend: function(_xhr) {
+                    ok(_xhr === xhr);
+                    return false;
+                }
+            });
+            strictEqual(this.ajaxSettings.beforeSend(xhr), false);
+        });
+
+        // Make sure cross domain requests to DELETE, PATCH, and PUT fail with exceptions
+        test("Try Forbidden requests.", 3, function() {
+            Backbone.emulateHTTP = true;
+            var model = new Backbone.CrossDomainModel;
+            model.url = 'http://example.com/test';
 
             try {
                 // This should fail and throw an exception.
@@ -102,12 +168,6 @@ $(document).ready(function() {
             } catch (x) {
                 strictEqual(x.message, "Backbone.CrossDomainModel cannot use PUT, PATCH, DELETE with XDomainRequest (IE)");
             }
-        });
-
-        test("Try a PATCH request.", 1, function() {
-            Backbone.emulateHTTP = true;
-            var model = new Backbone.CrossDomainModel;
-            model.url = '/test';
 
             try {
                 // This should fail and throw an exception.
@@ -115,12 +175,6 @@ $(document).ready(function() {
             } catch (x) {
                 strictEqual(x.message, "Backbone.CrossDomainModel cannot use PUT, PATCH, DELETE with XDomainRequest (IE)");
             }
-        });
-
-        test("Try a PUT request.", 1, function() {
-            Backbone.emulateHTTP = true;
-            var model = new Backbone.CrossDomainModel;
-            model.url = '/test';
 
             try {
                 // This should fail and throw an exception.
@@ -128,8 +182,7 @@ $(document).ready(function() {
             } catch (x) {
                 strictEqual(x.message, "Backbone.CrossDomainModel cannot use PUT, PATCH, DELETE with XDomainRequest (IE)");
             }
-        });
- 
+        }); 
     }
     else {
         test("#1756 - Call user provided beforeSend function.", 4, function() {

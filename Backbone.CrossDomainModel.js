@@ -27,7 +27,7 @@
         // Then try the model's url
         if (!requestUrl) {
             try {
-                requestUrl = model.url();
+                requestUrl = _.isFunction(model.url) ? model.url() : model.url;
             } catch(x) {}
         }
 
@@ -51,7 +51,7 @@
             var requestDomainParser = document.createElement('a');
             requestDomainParser.href = requestUrl(model, options);
 
-            if (thisDomainParser.host !== requestDomainParser.host) {
+            if (requestDomainParser.host !== "" && (thisDomainParser.host !== requestDomainParser.host)) {
                 useXDomainRequest = true;
             }
 

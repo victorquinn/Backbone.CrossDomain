@@ -182,21 +182,21 @@ $(document).ready(function() {
                 // This should fail and throw an exception.
                 model.sync('delete', model);
             } catch (x) {
-                strictEqual(x.message, "Backbone.Model cannot use PUT, PATCH, DELETE with XDomainRequest (IE)");
+              strictEqual(x.message, "Backbone.CrossDomain cannot use PUT, PATCH, DELETE with XDomainRequest (IE) and emulateHTTP=false");
             }
 
             try {
                 // This should fail and throw an exception.
                 model.sync('patch', model);
             } catch (x) {
-                strictEqual(x.message, "Backbone.Model cannot use PUT, PATCH, DELETE with XDomainRequest (IE)");
+                strictEqual(x.message, "Backbone.CrossDomain cannot use PUT, PATCH, DELETE with XDomainRequest (IE) and emulateHTTP=false");
             }
 
             try {
                 // This should fail and throw an exception.
                 model.sync('update', model);
             } catch (x) {
-                strictEqual(x.message, "Backbone.Model cannot use PUT, PATCH, DELETE with XDomainRequest (IE)");
+                strictEqual(x.message, "Backbone.CrossDomain cannot use PUT, PATCH, DELETE with XDomainRequest (IE) and emulateHTTP=false");
             }
         }); 
 

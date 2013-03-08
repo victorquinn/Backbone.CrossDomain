@@ -11,7 +11,7 @@ $(document).ready(function() {
         length : 123
     };
 
-    module('Backbone.CrossDomainModel', _.extend(new Environment, {
+    module('Backbone.CrossDomain', _.extend(new Environment, {
 
         setup : function() {
             Environment.prototype.setup.apply(this, arguments);
@@ -26,12 +26,12 @@ $(document).ready(function() {
     }));
 
     test("initialize", function() {
-        var xdm = new Backbone.CrossDomainModel();
-        ok(xdm instanceof Backbone.CrossDomainModel, 'Backbone.CrossDomainModel created');
+        var xdm = new Backbone.Model();
+        ok(xdm instanceof Backbone.Model, 'Backbone.Model created');
     });
 
     test("urlError", 2, function() {
-        var model = new Backbone.CrossDomainModel();
+        var model = new Backbone.Model();
         raises(function() {
             model.fetch();
         });
@@ -40,7 +40,7 @@ $(document).ready(function() {
     });
 
     test("#1052 - `options` is optional.", 0, function() {
-        var model = new Backbone.CrossDomainModel();
+        var model = new Backbone.Model();
         model.url = '/test';
         Backbone.sync('create', model);
     });
@@ -49,13 +49,13 @@ $(document).ready(function() {
         Backbone.ajax = function(settings){
             strictEqual(settings.url, '/test');
         };
-        var model = new Backbone.CrossDomainModel();
+        var model = new Backbone.Model();
         model.url = '/test';
         Backbone.sync('create', model);
     });
 
     test("Call provided error callback on error.", 1, function() {
-        var model = new Backbone.CrossDomainModel;
+        var model = new Backbone.Model;
         model.url = '/test';
         Backbone.sync('read', model, {
             error: function() { ok(true); }
@@ -64,7 +64,7 @@ $(document).ready(function() {
     });
 
     test('Use Backbone.emulateHTTP as default.', 2, function() {
-        var model = new Backbone.CrossDomainModel;
+        var model = new Backbone.Model;
         model.url = '/test';
 
         Backbone.emulateHTTP = true;
@@ -77,7 +77,7 @@ $(document).ready(function() {
     });
 
     test('Use Backbone.emulateJSON as default.', 2, function() {
-        var model = new Backbone.CrossDomainModel;
+        var model = new Backbone.Model;
         model.url = '/test';
 
         Backbone.emulateJSON = true;
@@ -97,13 +97,13 @@ $(document).ready(function() {
             Backbone.ajax = function(settings){
                 strictEqual(settings.url, '/test');
             };
-            var model = new Backbone.CrossDomainModel();
+            var model = new Backbone.Model();
             model.url = '/test';
             Backbone.sync('create', model);
         });
 
         test("Call provided error callback on error.", 1, function() {
-            var model = new Backbone.CrossDomainModel;
+            var model = new Backbone.Model;
             model.url = '/test';
             Backbone.sync('read', model, {
                 error: function() { ok(true); }
@@ -112,7 +112,7 @@ $(document).ready(function() {
         });
 
         test('Use Backbone.emulateHTTP as default.', 2, function() {
-            var model = new Backbone.CrossDomainModel;
+            var model = new Backbone.Model;
             model.url = '/test';
 
             Backbone.emulateHTTP = true;
@@ -125,7 +125,7 @@ $(document).ready(function() {
         });
 
         test('Use Backbone.emulateJSON as default.', 2, function() {
-            var model = new Backbone.CrossDomainModel;
+            var model = new Backbone.Model;
             model.url = '/test';
 
             Backbone.emulateJSON = true;
@@ -139,7 +139,7 @@ $(document).ready(function() {
 
         test("#1756 - Call user provided beforeSend function.", 4, function() {
             Backbone.emulateHTTP = true;
-            var model = new Backbone.CrossDomainModel;
+            var model = new Backbone.Model;
             model.url = '/test';
             var xhr = {
                 setRequestHeader: function(header, value) {
@@ -159,7 +159,7 @@ $(document).ready(function() {
         // Make sure cross domain requests to DELETE, PATCH, and PUT fail with emulateHTTP off
         test("Try Forbidden requests with emulateHTTP on.", 3, function() {
             Backbone.emulateHTTP = true;
-            var model = new Backbone.CrossDomainModel;
+            var model = new Backbone.Model;
             model.url = 'http://example.com/test';
 
             model.sync('delete', model);
@@ -175,35 +175,36 @@ $(document).ready(function() {
         // Make sure cross domain requests to DELETE, PATCH, and PUT work with emulateHTTP on
         test("Try Forbidden requests with emulateHTTP off.", 3, function() {
             Backbone.emulateHTTP = false;
-            var model = new Backbone.CrossDomainModel;
+            var model = new Backbone.Model;
             model.url = 'http://example.com/test';
 
             try {
                 // This should fail and throw an exception.
                 model.sync('delete', model);
             } catch (x) {
-                strictEqual(x.message, "Backbone.CrossDomainModel cannot use PUT, PATCH, DELETE with XDomainRequest (IE)");
+                strictEqual(x.message, "Backbone.Model cannot use PUT, PATCH, DELETE with XDomainRequest (IE)");
             }
 
             try {
                 // This should fail and throw an exception.
                 model.sync('patch', model);
             } catch (x) {
-                strictEqual(x.message, "Backbone.CrossDomainModel cannot use PUT, PATCH, DELETE with XDomainRequest (IE)");
+                strictEqual(x.message, "Backbone.Model cannot use PUT, PATCH, DELETE with XDomainRequest (IE)");
             }
 
             try {
                 // This should fail and throw an exception.
                 model.sync('update', model);
             } catch (x) {
-                strictEqual(x.message, "Backbone.CrossDomainModel cannot use PUT, PATCH, DELETE with XDomainRequest (IE)");
+                strictEqual(x.message, "Backbone.Model cannot use PUT, PATCH, DELETE with XDomainRequest (IE)");
             }
         }); 
+
     }
     else {
         test("#1756 - Call user provided beforeSend function.", 4, function() {
         Backbone.emulateHTTP = true;
-        var model = new Backbone.CrossDomainModel;
+        var model = new Backbone.Model;
         model.url = '/test';
         var xhr = {
             setRequestHeader: function(header, value) {

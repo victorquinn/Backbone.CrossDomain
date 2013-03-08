@@ -18,9 +18,28 @@
 
     Backbone.CrossDomainModel = Backbone.Model.extend({
         sync : function (method, model, options) {
+
+            // See if we need to use the XDomainRequest object for IE. If the request is on the
+            // same domain, we can fall back on the normal Backbone.ajax handling.
+
+            var useXDomainRequest = false;
+
+            // 1) See if this is a cross domain request
+
+            // See https://gist.github.com/jlong/2428561
+            var thisDomainParser = document.createElement('a');
+            thisDomainParser.href = document.URL;
+
+            var requestDomainParser = document.createElement('a');
+            requestDomainParser.href = model.url();
+
+            if (thisDomainParser.host !== requestDomainParser.host) {
+                useXDomainRequest = true;
+            }
+
             // This currently catches IE10 as well which supports XMLHttpRequest so it should
             // probably only trap IE < 10.
-            if (window.XDomainRequest) {
+            if (useXDomainRequest && window.XDomainRequest) {
                 // Backbone.sync (rewritten to use XDomainRequest object)
                 // -------------
 

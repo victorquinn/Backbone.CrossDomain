@@ -16,6 +16,24 @@
    }
 }(this, function(_, Backbone) {
 
+    // Helper function to determine the request url given model and options objects
+    function requestUrl(model, options) {
+        var requestUrl = null;
+        // First try the options object
+        try {
+            requestUrl = options.url;
+        } catch(x) {}
+
+        // Then try the model's url
+        if (!requestUrl) {
+            try {
+                requestUrl = model.url();
+            } catch(x) {}
+        }
+
+        return requestUrl;
+    }
+
     Backbone.CrossDomainModel = Backbone.Model.extend({
         sync : function (method, model, options) {
 
@@ -31,7 +49,7 @@
             thisDomainParser.href = document.URL;
 
             var requestDomainParser = document.createElement('a');
-            requestDomainParser.href = model.url();
+            requestDomainParser.href = requestUrl(model, options);
 
             if (thisDomainParser.host !== requestDomainParser.host) {
                 useXDomainRequest = true;

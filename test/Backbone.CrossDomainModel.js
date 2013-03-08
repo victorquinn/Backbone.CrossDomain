@@ -156,9 +156,25 @@ $(document).ready(function() {
             strictEqual(this.ajaxSettings.beforeSend(xhr), false);
         });
 
-        // Make sure cross domain requests to DELETE, PATCH, and PUT fail with exceptions
-        test("Try Forbidden requests.", 3, function() {
+        // Make sure cross domain requests to DELETE, PATCH, and PUT fail with emulateHTTP off
+        test("Try Forbidden requests with emulateHTTP on.", 3, function() {
             Backbone.emulateHTTP = true;
+            var model = new Backbone.CrossDomainModel;
+            model.url = 'http://example.com/test';
+
+            model.sync('delete', model);
+            strictEqual(this.ajaxSettings.emulateHTTP, true);
+
+            model.sync('patch', model);
+            strictEqual(this.ajaxSettings.emulateHTTP, true);
+
+            model.sync('update', model);
+            strictEqual(this.ajaxSettings.emulateHTTP, true);
+        }); 
+
+        // Make sure cross domain requests to DELETE, PATCH, and PUT work with emulateHTTP on
+        test("Try Forbidden requests with emulateHTTP off.", 3, function() {
+            Backbone.emulateHTTP = false;
             var model = new Backbone.CrossDomainModel;
             model.url = 'http://example.com/test';
 

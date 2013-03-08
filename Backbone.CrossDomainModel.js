@@ -89,16 +89,16 @@
 
                 var type = methodMap[method];
 
-                // XDomainRequest only works with POST. So DELETE/PUT/PATCH can't work here.
-                if (method === 'update' || method === 'patch' || method === 'delete') {
-                    throw new Error('Backbone.CrossDomainModel cannot use PUT, PATCH, DELETE with XDomainRequest (IE)');
-                }
-
                 // Default options, unless specified.
                 _.defaults(options || (options = {}), {
                     emulateHTTP: Backbone.emulateHTTP,
                     emulateJSON: Backbone.emulateJSON
                 });
+
+                // XDomainRequest only works with POST. So DELETE/PUT/PATCH can't work here.
+                if (!options.emulateHTTP && (method === 'update' || method === 'patch' || method === 'delete')) {
+                    throw new Error('Backbone.CrossDomainModel cannot use PUT, PATCH, DELETE with XDomainRequest (IE)');
+                }
 
                 // Default JSON-request options.
                 var params = {type: type, dataType: 'json'};

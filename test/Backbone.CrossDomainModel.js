@@ -89,7 +89,50 @@ $(document).ready(function() {
         strictEqual(this.ajaxSettings.emulateJSON, false);
     });
 
-    test("#1756 - Call user provided beforeSend function.", 4, function() {
+    // Perform these tests only for IE
+    if (window.XDomainRequest) {
+        test("Try a DELETE request.", 1, function() {
+            Backbone.emulateHTTP = true;
+            var model = new Backbone.CrossDomainModel;
+            model.url = '/test';
+
+            try {
+                // This should fail and throw an exception.
+                model.sync('delete', model);
+            } catch (x) {
+                strictEqual(x.message, "Backbone.CrossDomainModel cannot use PUT, PATCH, DELETE with XDomainRequest (IE)");
+            }
+        });
+
+        test("Try a PATCH request.", 1, function() {
+            Backbone.emulateHTTP = true;
+            var model = new Backbone.CrossDomainModel;
+            model.url = '/test';
+
+            try {
+                // This should fail and throw an exception.
+                model.sync('patch', model);
+            } catch (x) {
+                strictEqual(x.message, "Backbone.CrossDomainModel cannot use PUT, PATCH, DELETE with XDomainRequest (IE)");
+            }
+        });
+
+        test("Try a PUT request.", 1, function() {
+            Backbone.emulateHTTP = true;
+            var model = new Backbone.CrossDomainModel;
+            model.url = '/test';
+
+            try {
+                // This should fail and throw an exception.
+                model.sync('update', model);
+            } catch (x) {
+                strictEqual(x.message, "Backbone.CrossDomainModel cannot use PUT, PATCH, DELETE with XDomainRequest (IE)");
+            }
+        });
+ 
+    }
+    else {
+        test("#1756 - Call user provided beforeSend function.", 4, function() {
         Backbone.emulateHTTP = true;
         var model = new Backbone.CrossDomainModel;
         model.url = '/test';
@@ -106,5 +149,6 @@ $(document).ready(function() {
             }
         });
         strictEqual(this.ajaxSettings.beforeSend(xhr), false);
-    });
+    }); 
+    }
 });

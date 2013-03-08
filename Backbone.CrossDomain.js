@@ -68,6 +68,12 @@
         // This currently catches IE10 as well which supports XMLHttpRequest so it should
         // probably only trap IE < 10.
         if (useXDomainRequest && window.XDomainRequest) {
+            // See this article for more details on all the silly nuances: http://vq.io/14DJ1Tv
+
+            // Check if protocols differ, if so throw an error so the app devs can handle.
+            if (thisDomainParser.protocol !== requestDomainParser.protocol) {
+                throw new Error('Backbone.CrossDomain only works for same protocol requests (HTTP -> HTTP, HTTPS -> HTTPS) cannot mix.');
+            }
 
             // Basically Backbone.sync rewritten to use XDomainRequest object
             var type = methodMap[method];
@@ -85,7 +91,7 @@
             // to notice they're trying to do something illegal with this request and it may
             // require server-side changes for compatibility.
             if (!options.emulateHTTP && (method === 'update' || method === 'patch' || method === 'delete')) {
-                throw new Error('Backbone.CrossDomain cannot use PUT, PATCH, DELETE with XDomainRequest (IE)');
+                throw new Error('Backbone.CrossDomain cannot use PUT, PATCH, DELETE with XDomainRequest (IE) and emulateHTTP=false');
             }
 
             // Default JSON-request options.

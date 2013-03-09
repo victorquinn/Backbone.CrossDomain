@@ -198,7 +198,26 @@ $(document).ready(function() {
             } catch (x) {
                 strictEqual(x.message, "Backbone.CrossDomain cannot use PUT, PATCH, DELETE with XDomainRequest (IE) and emulateHTTP=false");
             }
-        }); 
+        });
+
+        test("Try HTTPS request from HTTP domain", 2, function() {
+            Backbone.emulateHTTP = false;
+            var model = new Backbone.Model;
+            model.url = 'https://example.com/test';
+
+            try {
+                // This should fail and throw an exception.
+                model.sync('read', model);
+            } catch (x) {
+              strictEqual(x.message, "Backbone.CrossDomain only works for same protocol requests (HTTP -> HTTP, HTTPS -> HTTPS) cannot mix.");
+            }
+
+            model.url = '//example.com/test';
+
+            model.sync('read', model);
+            ok(model, "Model read worked without a protocol specified.");
+
+        });
 
     }
     else {

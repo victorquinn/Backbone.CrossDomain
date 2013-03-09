@@ -34,6 +34,19 @@
         return requestUrl;
     }
 
+    // Helper function to determine whether protocols differ.
+    function protocolsDiffer(thisProtocol, requestProtocol) {
+        if (thisProtocol === ':' || requestProtocol === ":") {
+            return false;
+        }
+
+        else if (thisProtocol === requestProtocol) {
+            return false;
+        }
+
+        return true;
+    }
+
     // Map from CRUD to HTTP for our default `Backbone.sync` implementation.
 
     var methodMap = {
@@ -68,10 +81,12 @@
         // This currently catches IE10 as well which supports XMLHttpRequest so it should
         // probably only trap IE < 10.
         if (useXDomainRequest && window.XDomainRequest) {
+
+
             // See this article for more details on all the silly nuances: http://vq.io/14DJ1Tv
 
             // Check if protocols differ, if so throw an error so the app devs can handle.
-            if (thisDomainParser.protocol !== requestDomainParser.protocol) {
+            if (protocolsDiffer(thisDomainParser.protocol, requestDomainParser.protocol)) {
                 throw new Error('Backbone.CrossDomain only works for same protocol requests (HTTP -> HTTP, HTTPS -> HTTPS) cannot mix.');
             }
 

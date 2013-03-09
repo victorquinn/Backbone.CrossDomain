@@ -163,13 +163,19 @@ $(document).ready(function() {
             model.url = 'http://example.com/test';
 
             model.sync('delete', model);
-            strictEqual(this.ajaxSettings.emulateHTTP, true);
+            strictEqual(this.ajaxSettings.emulateHTTP,
+                        true,
+                       "CrossDomain Sync appropriately allowed DELETE with emulateHTTP on");
 
             model.sync('patch', model);
-            strictEqual(this.ajaxSettings.emulateHTTP, true);
+            strictEqual(this.ajaxSettings.emulateHTTP,
+                        true,
+                       "CrossDomain Sync appropriately allowed PATCH with emulateHTTP on");
 
             model.sync('update', model);
-            strictEqual(this.ajaxSettings.emulateHTTP, true);
+            strictEqual(this.ajaxSettings.emulateHTTP,
+                        true,
+                       "CrossDomain Sync appropriately allowed PUT with emulateHTTP on");
         }); 
 
         // Make sure cross domain requests to DELETE, PATCH, and PUT work with emulateHTTP on
@@ -182,25 +188,31 @@ $(document).ready(function() {
                 // This should fail and throw an exception.
                 model.sync('delete', model);
             } catch (x) {
-              strictEqual(x.message, "Backbone.CrossDomain cannot use PUT, PATCH, DELETE with XDomainRequest (IE) and emulateHTTP=false");
+              strictEqual(x.message,
+                          "Backbone.CrossDomain cannot use PUT, PATCH, DELETE with XDomainRequest (IE) and emulateHTTP=false",
+                          "CrossDomain Sync appropriately denied DELETE request with emulateHTTP off on IE.");
             }
 
             try {
                 // This should fail and throw an exception.
                 model.sync('patch', model);
             } catch (x) {
-                strictEqual(x.message, "Backbone.CrossDomain cannot use PUT, PATCH, DELETE with XDomainRequest (IE) and emulateHTTP=false");
+                strictEqual(x.message,
+                            "Backbone.CrossDomain cannot use PUT, PATCH, DELETE with XDomainRequest (IE) and emulateHTTP=false",
+                            "CrossDomain Sync appropriately denied PATCH request with emulateHTTP off on IE.");
             }
 
             try {
                 // This should fail and throw an exception.
                 model.sync('update', model);
             } catch (x) {
-                strictEqual(x.message, "Backbone.CrossDomain cannot use PUT, PATCH, DELETE with XDomainRequest (IE) and emulateHTTP=false");
+                strictEqual(x.message,
+                            "Backbone.CrossDomain cannot use PUT, PATCH, DELETE with XDomainRequest (IE) and emulateHTTP=false",
+                            "CrossDomain Sync appropriately denied PUT request with emulateHTTP off on IE.");
             }
         });
 
-        test("Try HTTPS request from HTTP domain", 2, function() {
+        test("Test out different combos of protocols", 2, function() {
             Backbone.emulateHTTP = false;
             var model = new Backbone.Model;
             model.url = 'https://example.com/test';
@@ -209,14 +221,15 @@ $(document).ready(function() {
                 // This should fail and throw an exception.
                 model.sync('read', model);
             } catch (x) {
-              strictEqual(x.message, "Backbone.CrossDomain only works for same protocol requests (HTTP -> HTTP, HTTPS -> HTTPS) cannot mix.");
+              strictEqual(x.message,
+                          "Backbone.CrossDomain only works for same protocol requests (HTTP -> HTTP, HTTPS -> HTTPS) cannot mix.",
+                          "CrossDomain Sync appropriately threw error when met with mixed protocols on IE.");
             }
 
             model.url = '//example.com/test';
 
             model.sync('read', model);
-            ok(model, "Model read worked without a protocol specified.");
-
+            ok(model, "Model read worked without a protocol specified and no errors thrown.");
         });
 
     }

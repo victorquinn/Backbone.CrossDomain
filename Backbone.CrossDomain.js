@@ -146,10 +146,26 @@
                 params.processData = false;
             }
 
-            // Make the request, allowing the user to override any Ajax options.
-            var xhr = options.xhr = Backbone.ajax(_.extend(params, options));
-            model.trigger('request', model, xhr, options);
-            return xhr;
+            var success = options.success;
+            options.success = function(resp) {
+                if (success) success(model, resp, options);
+                model.trigger('sync', model, resp, options);
+            };
+
+            var error = options.error;
+            options.error = function(xdr) {
+                if (error) error(model, xdr, options);
+                model.trigger('error', model, xdr, options);
+            };
+
+            // Make the request using XDomainRequest
+
+            var xdr = options.xhr = new XDomainRequest();
+            xdr.open(params.type, params.url);
+            xdr.send(params.data);
+
+            model.trigger('request', model, xdr, options);
+            return xdr;
         }
         else {
             return Backbone.vanillaSync.apply(this, arguments);

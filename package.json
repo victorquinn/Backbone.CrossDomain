@@ -1,5 +1,5 @@
 {
-  "name": "Backbone.CrossDomain",
+  "name": "backbone-crossdomain",
   "description": "An extension for Backbone.js with a Sync that adds support for IE 7-9 CORS requests using IE's XDomainRequest Object while maintaining compatibility with non-IE systems.",
   "version": "0.1.0",
   "homepage": "https://github.com/victorquinn/Backbone.CrossDomain",

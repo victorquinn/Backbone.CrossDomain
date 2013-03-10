@@ -117,6 +117,10 @@
                 params.url = _.result(model, 'url') || urlError();
             }
 
+            // TODO: XDomainRequest only accepts text/plain Content-Type header
+
+            // TODO: XDomainRequest doesn't like other headers
+
             // Ensure that we have the appropriate request data.
             if (options.data == null && model && (method === 'create' || method === 'update' || method === 'patch')) {
                 params.contentType = 'application/json';
@@ -146,21 +150,24 @@
                 params.processData = false;
             }
 
+            var xdr = options.xhr = new XDomainRequest();
+
             var success = options.success;
-            options.success = function(resp) {
-                if (success) success(model, resp, options);
+            xdr.onload = function(resp) {
+                resp = JSON.parse(xdr.responseText);
+                if (resp) success(model, resp, options);
                 model.trigger('sync', model, resp, options);
-            };
+            }
 
             var error = options.error;
-            options.error = function(xdr) {
+            xdr.onerror = function(xdr) {
                 if (error) error(model, xdr, options);
                 model.trigger('error', model, xdr, options);
             };
 
             // Make the request using XDomainRequest
 
-            var xdr = options.xhr = new XDomainRequest();
+
             xdr.open(params.type, params.url);
             xdr.send(params.data);
 

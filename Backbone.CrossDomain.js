@@ -158,9 +158,8 @@
 
             var success = options.success;
             xdr.onload = function(resp) {
-                resp = JSON.parse(xdr.responseText);
-                if (resp) success(model, resp, options);
-                model.trigger('sync', model, resp, options);
+                var obj = Backbone.$.parseJSON(xdr.responseText);
+                if (obj) success(obj);
             }
 
             var error = options.error;

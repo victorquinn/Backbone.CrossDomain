@@ -78,10 +78,10 @@
             useXDomainRequest = true;
         }
 
-        // This currently catches IE10 as well which supports XMLHttpRequest so it should
-        // probably only trap IE < 10.
-        if (useXDomainRequest && window.XDomainRequest) {
-
+        // Only use this if browser doesn't support CORS natively. This should
+        // catch IE7/8/9 but keep IE10 using the built in XMLHttpRequest which
+        // IE10 finally supports for CORS.
+        if (useXDomainRequest && !Backbone.$.support.cors) {
 
             // See this article for more details on all the silly nuances: http://vq.io/14DJ1Tv
 

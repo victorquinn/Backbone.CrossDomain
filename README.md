@@ -4,9 +4,11 @@
 
 This is an extension for Backbone.js with a Sync that adds support for IE 7-9 CORS requests using IE's XDomainRequest Object while maintaining compatibility with non-IE systems.
 
-This is intended as a drop-in replacement for the default Backbone.sync so you should be able to just plop this in and Cross Domain Requests (using CORS) will just magically work on IE.
+This is intended as a drop-in replacement for the default Backbone.sync so you should be able to just plop this in and Cross Domain Requests (using CORS) should just magically work on IE.
 
 ## Installation
+
+You can manually download/install this library or grab it with npm:
 
 ```
 npm install Backbone.CrossDomain
@@ -21,7 +23,11 @@ Include Backbone.CrossDomain after including Backbone.js:
 <script type="text/javascript" src="Backbone.CrossDomain.js"></script>
 ```
 
+And that's it! Now anything that uses Backbone.sync() internally should work with a cross domain request from IE7/8/9 where they didn't previously. This means model.fetch(), model.save(), model.sync, collection.fetch(), etc.
+
 ### RequireJS
+
+This library has AMD support for use with RequireJS. This is not necessary to use this library but helpful when building an app with AMD.
 
 Include [RequireJS](http://requirejs.org):
 

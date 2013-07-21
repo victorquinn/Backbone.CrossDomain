@@ -151,7 +151,7 @@
 
             // Need to send this along as key/value pairs, can't send JSON blob
             if (params.type === 'POST') {
-                params.data = Backbone.$.param(JSON.parse(params.data));
+                params.data = Backbone.$.param(Backbone.$.parseJSON(params.data));
             }
 
             var xdr = options.xhr = new XDomainRequest();
@@ -170,7 +170,14 @@
 
             // Make the request using XDomainRequest
             xdr.open(params.type, params.url);
-            xdr.send(params.data);
+
+            // Must declare these even if empty or IE will abort randomly: http://vq.io/12bnhye
+            xdr.onprogress = function() {};
+            xdr.ontimeout = function() {};
+
+            setTimeout(function() {
+                xdr.send(params.data);
+            }, 0);
 
             model.trigger('request', model, xdr, options);
             return xdr;

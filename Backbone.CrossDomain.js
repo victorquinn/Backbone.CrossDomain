@@ -160,7 +160,7 @@
             xdr.onload = function(resp) {
                 var obj = Backbone.$.parseJSON(xdr.responseText);
                 if (obj) success(obj);
-            }
+            };
 
             var error = options.error;
             xdr.onerror = function(xdr) {

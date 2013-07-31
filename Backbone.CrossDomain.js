@@ -154,28 +154,66 @@
                 params.data = Backbone.$.param(Backbone.$.parseJSON(params.data));
             }
 
-            var xdr = options.xhr = new XDomainRequest();
+            var xdr = options.xhr = new XDomainRequest(),
+                success = options.success,
+                error = options.error;
 
-            var success = options.success;
-            xdr.onload = function(resp) {
-                var obj = Backbone.$.parseJSON(xdr.responseText);
-                if (obj) success(obj);
-            };
+            // Attach deferreds, but only if $ is jQuery (if we don't do this check,
+            // we'll break support for Zepto or other libraries without promise support
+            if (Backbone.$.fn.jquery) {
+                var deferred = Backbone.$.Deferred(),
+                    completeDeferred = Backbone.$.Callbacks("once memory");
 
-            var error = options.error;
-            xdr.onerror = function(xdr) {
-                if (error) error(model, xdr, options);
-                model.trigger('error', model, xdr, options);
-            };
+                // Attach deferreds
+                deferred.promise(xdr).complete = completeDeferred.add;
+
+                xdr.onload = function () {
+                    var obj = {};
+                    if (xdr.responseText) {
+                        obj = Backbone.$.parseJSON(xdr.responseText);
+                    }
+                    if (obj) {
+                        deferred.resolveWith(this, [success, 'success', xdr]);
+                        success(obj);
+                    } else {
+                        deferred.resolveWith(this, [success, 'success', xdr]);
+                        success(obj);
+                    }
+                };
+                xdr.onerror = function () {
+                    if (error) {
+                        error(model, xdr, options);
+                        deferred.resolveWith(this, [xdr, 'error', error]);
+                    }
+                    model.trigger('error', model, xdr, options);
+                };
+
+                xdr.done(xdr.onload);
+                xdr.fail(xdr.onerror);
+
+            } else {
+                xdr.onload = function (resp) {
+                    var obj = {};
+                    if (xdr.responseText) {
+                        obj = Backbone.$.parseJSON(xdr.responseText);
+                    }
+                    if (obj) success(obj);
+                };
+
+                xdr.onerror = function (xdr) {
+                    if (error) error(model, xdr, options);
+                    model.trigger('error', model, xdr, options);
+                };
+            }
 
             // Make the request using XDomainRequest
             xdr.open(params.type, params.url);
 
             // Must declare these even if empty or IE will abort randomly: http://vq.io/12bnhye
-            xdr.onprogress = function() {};
-            xdr.ontimeout = function() {};
+            xdr.onprogress = function () {};
+            xdr.ontimeout = function () {};
 
-            setTimeout(function() {
+            setTimeout(function () {
                 xdr.send(params.data);
             }, 0);
 

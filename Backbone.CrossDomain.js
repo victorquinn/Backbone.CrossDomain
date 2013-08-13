@@ -27,7 +27,7 @@
         // Then try the model's url
         if (!requestUrl) {
             try {
-                requestUrl = _.isFunction(model.url) ? model.url() : model.url;
+                requestUrl = _.result(model, 'url');
             } catch(x) {}
         }
 

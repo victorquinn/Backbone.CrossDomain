@@ -25,6 +25,13 @@ Include Backbone.CrossDomain after including Backbone.js:
 
 And that's it! Now anything that uses Backbone.sync() internally should work with a cross domain request from IE7/8/9 where they didn't previously. This means model.fetch(), model.save(), model.sync, collection.fetch(), etc.
 
+### Bower
+Easy install with Bower.
+
+```
+bower install backbone.crossdomain
+```
+
 ### RequireJS
 
 This library has AMD support for use with RequireJS. This is not necessary to use this library but helpful when building an app with AMD.

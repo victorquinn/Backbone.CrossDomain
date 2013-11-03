@@ -161,48 +161,26 @@
             if (Backbone.$.fn.jquery) {
                 var deferred = Backbone.$.Deferred(),
                     completeDeferred = Backbone.$.Callbacks("once memory");
-
-                // Attach deferreds
                 deferred.promise(xdr).complete = completeDeferred.add;
-
-                xdr.onload = function () {
-                    var obj = {};
-                    if (xdr.responseText) {
-                        obj = Backbone.$.parseJSON(xdr.responseText);
-                    }
-                    if (obj) {
-                        deferred.resolveWith(this, [success, 'success', xdr]);
-                        success(obj);
-                    } else {
-                        deferred.resolveWith(this, [success, 'success', xdr]);
-                        success(obj);
-                    }
-                };
-                xdr.onerror = function () {
-                    if (error) {
-                        error(model, xdr, options);
-                        deferred.resolveWith(this, [xdr, 'error', error]);
-                    }
-                    model.trigger('error', model, xdr, options);
-                };
-
-                //xdr.done(xdr.onload);
-                //xdr.fail(xdr.onerror);
-
-            } else {
-                xdr.onload = function (resp) {
-                    var obj = {};
-                    if (xdr.responseText) {
-                        obj = Backbone.$.parseJSON(xdr.responseText);
-                    }
-                    if (obj) success(obj);
-                };
-
-                xdr.onerror = function (xdr) {
-                    if (error) error(model, xdr, options);
-                    model.trigger('error', model, xdr, options);
-                };
             }
+
+            xdr.onload = function () {
+                var obj = {};
+                if (xdr.responseText) {
+                    obj = Backbone.$.parseJSON(xdr.responseText);
+                }
+                if (obj) {
+                    if(deferred) deferred.resolveWith(this, [success, 'success', xdr]);
+                    success(obj);
+                }
+            };
+            xdr.onerror = function () {
+                if (error) {
+                    error(model, xdr, options);
+                   if(deferred) deferred.rejectWith(this, [xdr, 'error', error]);
+                }
+                model.trigger('error', model, xdr, options);
+            };
 
             // Make the request using XDomainRequest
             xdr.open(params.type, params.url);

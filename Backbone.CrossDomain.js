@@ -103,14 +103,12 @@
             if (!options.emulateHTTP && (method === 'update' || method === 'patch' || method === 'delete')) {
                 throw new Error('Backbone.CrossDomain cannot use PUT, PATCH, DELETE with XDomainRequest (IE) and emulateHTTP=false');
             }
-
+            
             // Default JSON-request options.
-            var params = {type: type, dataType: 'json'};
+            var params = {type: type, dataType: 'json', url: requestUrl(model, options)};
 
             // Ensure that we have a URL.
-            if (!options.url) {
-                params.url = _.result(model, 'url') || urlError();
-            }
+            if (!params.url) throw new Error('No URL!');
 
             // Check if protocols differ, if so try the request with the current domain protocol
             if (protocolsDiffer(thisDomainParser.protocol, requestDomainParser.protocol)) {

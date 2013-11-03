@@ -186,8 +186,8 @@
                     model.trigger('error', model, xdr, options);
                 };
 
-                xdr.done(xdr.onload);
-                xdr.fail(xdr.onerror);
+                //xdr.done(xdr.onload);
+                //xdr.fail(xdr.onerror);
 
             } else {
                 xdr.onload = function (resp) {

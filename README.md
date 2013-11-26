@@ -11,7 +11,7 @@ This is intended as a drop-in replacement for the default Backbone.sync so you s
 You can manually download/install this library or grab it with npm:
 
 ```
-npm install Backbone.CrossDomain
+npm install backbone-crossdomain
 ```
 
 ## Usage

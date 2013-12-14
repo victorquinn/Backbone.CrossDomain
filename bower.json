@@ -1,6 +1,6 @@
 {
     "name": "backbone.crossdomain",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "main": "Backbone.CrossDomain.js",
     "ignore": ["node_modules"],
     "description": "Backbone.CrossDoman - A model extension for Backbone.js with a Sync that works with IE 7-9 using its XDomainRequest",

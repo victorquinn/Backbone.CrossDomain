@@ -137,7 +137,6 @@
                 if (options.emulateJSON) params.data._method = type;
                 var beforeSend = options.beforeSend;
                 options.beforeSend = function(xhr) {
-                    xhr.setRequestHeader('X-HTTP-Method-Override', type);
                     if (beforeSend) return beforeSend.apply(this, arguments);
                 };
             }

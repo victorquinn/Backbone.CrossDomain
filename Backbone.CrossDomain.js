@@ -169,8 +169,8 @@
                     obj = Backbone.$.parseJSON(xdr.responseText);
                 }
                 if (obj) {
-                    if(deferred) deferred.resolveWith(this, [obj, 'success', xdr]);
                     success(obj);
+                    if(deferred) deferred.resolveWith(this, [obj, 'success', xdr]);
                 }
             };
             xdr.onerror = function () {

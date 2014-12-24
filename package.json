@@ -21,7 +21,7 @@
       "url": "https://github.com/victorquinn/Backbone.CrossDomain/blob/master/LICENSE-MIT"
     }
   ],
-  "main": "Gruntfile.js",
+  "main": "Backbone.CrossDomain.js",
   "engines": {
     "node": ">= 0.8.0"
   },
@@ -37,5 +37,9 @@
     "plugin",
     "cors",
     "ie"
-  ]
+  ],
+  "dependencies": {
+    "backbone": "^1.1.2",
+    "underscore": "^1.7.0"
+  }
 }

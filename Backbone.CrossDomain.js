@@ -153,6 +153,11 @@
                 params.data = Backbone.$.param(Backbone.$.parseJSON(params.data));
             }
 
+            // Append the .data parameters to the url of GET request
+            if (params.type === 'GET' && !_.include(params.url, '?') && options.data ){
+                params.url += '?' + Backbone.$.param(options.data);
+            }
+
             var xdr = options.xhr = new XDomainRequest(),
                 success = options.success,
                 error = options.error;

@@ -65,6 +65,11 @@
     // the original 'Backbone.sync' is still available in 'Backbone.vanillaSync'
     Backbone.sync = function(method, model, options) {
 
+        // avoid to enter in conflict with jsonp mechanism
+        if (options.dataType === 'jsonp') {
+            return Backbone.vanillaSync.apply(this, arguments);
+        }
+
         // See if we need to use the XDomainRequest object for IE. If the request is on the
         // same domain, we can fall back on the normal Backbone.ajax handling.
         var useXDomainRequest = false;

@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "grunt-contrib-qunit": "0.1.1rc6",
-    "grunt": "0.4.0rc7"
+    "grunt": "1.5.3"
   },
   "keywords": [
     "backbone",
